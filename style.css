@@ -1,0 +1,42 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: hsl(210, 35%, 35%);
+}
+
+.boxed {
+    box-sizing: border-box;
+}
+
+.center {
+    text-align: center;
+}
+
+.button {
+    padding: 3px 10px;
+}
+
+.taskDiv {
+    margin-top: 2em;
+    margin-left: 30%;
+    text-align: left;
+}
+
+li {
+    display: flex;
+    justify-content: flex-start;
+    gap: 3px;
+}
+
+li span.taskName {
+    margin-right: 10px;
+    color: whitesmoke
+}
+
+
+li button {
+    background-color: inherit;
+    border: none;
+}

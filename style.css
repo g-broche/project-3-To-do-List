@@ -6,14 +6,6 @@ body {
     background-color: hsl(210, 35%, 35%);
 }
 
-.boxed {
-    box-sizing: border-box;
-}
-
-.center {
-    text-align: center;
-}
-
 .button {
     padding: 3px 10px;
 }
@@ -32,11 +24,34 @@ li {
 
 li span.taskName {
     margin-right: 10px;
-    color: whitesmoke
 }
-
 
 li button {
     background-color: inherit;
     border: none;
+}
+
+.priorityHigh {
+    color: red;
+}
+
+.priorityModerate {
+    color: orange;
+}
+
+.priorityLow {
+    color: yellow;
+}
+
+.priorityDone {
+    color: green;
+    text-decoration-line: line-through;
+}
+
+.boxed {
+    box-sizing: border-box;
+}
+
+.center {
+    text-align: center;
 }

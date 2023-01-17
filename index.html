@@ -18,38 +18,17 @@
                 <option selected value="moderate">Moderate Priority</option>
                 <option value="low">Low Priority</option>
             </select>
-            <button class="button" onclick="addTask()">Add</button>
+            <button class="button" onclick="Database.add()">Add</button>
         </div>
         <div class="taskDiv boxed">
             <ul id="taskContainer">
-                <li><span class="priority high">High priority</span>
-                    <span class="taskName">task 1 </span>
-                    <button class="taskDone" onclick="taskIsDone()">Done</button>
-                    <button class="taskdelete" onclick="taskDelete()">remove</button>
-                </li>
 
-                <li><span class="priority high">High priority</span>
-                    <span class="taskName">task 2 : this is a very very long task </span>
-                    <button class="taskDone" onclick="taskIsDone()">Done</button>
-                    <button class="taskdelete" onclick="taskDelete()">remove</button>
-                </li>
-
-                <li><span class="priority moderate">Moderate priority</span>
-                    <span class="taskName">task 3 : average task </span>
-                    <button class="taskDone" onclick="taskIsDone()">Done</button>
-                    <button class="taskdelete" onclick="taskDelete()">remove</button>
-                </li>
-
-                <li><span class="priority low">Low priority</span>
-                    <span class="taskName">task 4 : this is just a task </span>
-                    <button class="taskDone" onclick="taskIsDone()">Done</button>
-                    <button class="taskdelete" onclick="taskDelete()">remove</button>
-                </li>
             </ul>
         </div>
     </main>
 
 </body>
+
 
 </html>
 

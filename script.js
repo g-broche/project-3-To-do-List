@@ -12,58 +12,91 @@ const Database = {
     array: []
 };
 
-//create and return a new task object
+//creates and adds a new task object in the Database
 Database.add = function () {
     let taskDescription = inputTask.value;
     let taskPriority = inputPriority.value;
     let newTask = new Task(taskDescription, taskPriority, false);
-    console.log(newTask);
     this.array.push(newTask);
     Database.display();
-    console.log(Database.array);
 }
 
 Database.display = function () {
     clearTaskList()
     let priorityClass;
-    for (let i = 0; i <= Database.array.length - 1; i++) {
-        switch (Database.array[i].priorityLevel) {
+    for (let i = 0; i <= this.array.length - 1; i++) {
+        switch (this.array[i].priorityLevel) {
             case "high":
-                console.log("high");
                 priorityClass = "priorityHigh";
                 break;
             case "moderate":
-                console.log("med");
                 priorityClass = "priorityModerate";
                 break;
             case "low":
-                console.log("low");
                 priorityClass = "priorityLow";
                 break;
             default:
-                console.log("def");
-                priorityClass = "priorityModerate";
+                priorityClass = "default";
                 break;
         }
         let currentTask = document.createElement("span");
-        currentTask.classList.add("taskName", priorityClass);
-        currentTask.textContent = (Database.array[i].taskName);
+        if (this.array[i].isDone) {
+            currentTask.classList.add("taskName", "done", priorityClass);
+        } else {
+            currentTask.classList.add("taskName", priorityClass);
+        }
+        currentTask.textContent = (this.array[i].taskName);
 
         let doneButton = document.createElement("button");
         doneButton.classList.add("taskDone");
         doneButton.textContent = "Done";
-        //doneButton.onclick = taskIsDone();
+        doneButton.onclick = taskIsDone;
 
         let deleteButton = document.createElement("button");
         deleteButton.classList.add("taskdelete");
         deleteButton.textContent = "remove";
-        //deleteButton.onclick = taskDelete();
+        //deleteButton.onclick = taskDelete;
 
         let newLi = document.createElement("li");
 
         newLi.append(currentTask, doneButton, deleteButton);
         taskList.appendChild(newLi)
     }
+}
+
+Database.sort = function () {
+    let tempBase = [];
+    for (let i = 0; i <= this.array.length - 1; i++) {
+        if ((this.array[i].priorityLevel == "high") && (!this.array[i].isDone)) {
+            tempBase.push(this.array[i]);
+        }
+    }
+    for (let i = 0; i <= this.array.length - 1; i++) {
+        if ((this.array[i].priorityLevel == "moderate") && (!this.array[i].isDone)) {
+            tempBase.push(this.array[i]);
+        }
+    }
+    for (let i = 0; i <= this.array.length - 1; i++) {
+        if ((this.array[i].priorityLevel == "low") && (!this.array[i].isDone)) {
+            tempBase.push(this.array[i]);
+        }
+    }
+    for (let i = 0; i <= this.array.length - 1; i++) {
+        if ((this.array[i].priorityLevel == "high") && (this.array[i].isDone)) {
+            tempBase.push(this.array[i]);
+        }
+    }
+    for (let i = 0; i <= this.array.length - 1; i++) {
+        if ((this.array[i].priorityLevel == "moderate") && (this.array[i].isDone)) {
+            tempBase.push(this.array[i]);
+        }
+    }
+    for (let i = 0; i <= this.array.length - 1; i++) {
+        if ((this.array[i].priorityLevel == "low") && (this.array[i].isDone)) {
+            tempBase.push(this.array[i]);
+        }
+    }
+    this.array = [...tempBase];
 }
 
 
@@ -75,9 +108,23 @@ function Task(name, priority, bool = false) {
     this.isDone = bool;
 }
 
-/*function taskIsDone(){
-    let parentItemList=this.parentElement
-}*/
+/* ***** functions ***** */
+
+//using an element as parameter, gets and returns the index of the corresponding list item inside the parent unordered list.
+function getIndexFromButtonPush(trigger) {
+    let listItem = trigger.parentElement;
+    let parentList = listItem.parentElement;
+    let index = Array.from(parentList.children).indexOf(listItem);
+    return index;
+}
+
+//on <done> button click, gets name of the task, compare it to the list of tasks and line through the task in question.
+function taskIsDone() {
+    let taskIndex = getIndexFromButtonPush(this);
+    Database.array[taskIndex].isDone = true;
+    Database.sort();
+    Database.display();
+}
 
 function clearTaskList() {
     taskList.innerHTML = "";

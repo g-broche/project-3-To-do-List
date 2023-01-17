@@ -43,8 +43,11 @@ li button {
     color: yellow;
 }
 
-.priorityDone {
-    color: green;
+.default {
+    color: purple;
+}
+
+.done {
     text-decoration-line: line-through;
 }
 

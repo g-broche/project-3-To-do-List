@@ -6,13 +6,14 @@ body {
     background-color: hsl(210, 35%, 35%);
 }
 
-.button {
-    padding: 3px 10px;
+#saveTasks {
+    margin-left: 3em;
 }
 
 .taskDiv {
     margin-top: 2em;
     margin-left: 30%;
+    width: 40%;
     text-align: left;
 }
 
@@ -43,10 +44,6 @@ li button {
     color: yellow;
 }
 
-.default {
-    color: purple;
-}
-
 .done {
     text-decoration-line: line-through;
 }
@@ -57,4 +54,8 @@ li button {
 
 .center {
     text-align: center;
+}
+
+.button {
+    padding: 3px 10px;
 }

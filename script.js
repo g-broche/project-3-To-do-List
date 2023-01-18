@@ -143,9 +143,22 @@ function removeTask() {
     Database.display();
 }
 
-// clear task list <ul> of all its children
+// clears task list <ul> of all its children
 function clearTaskList() {
     taskList.innerHTML = "";
 }
 
+// stores the Database object into the local storage
+function storeTaskList() {
+    localStorage.clear();
+    window.localStorage.setItem("saveDB", JSON.stringify(Database.array));
+}
+
+//gets the savedDB local storage and copies it inside Database.array
+function fillDataOnLoad() {
+    let savedDB = JSON.parse(localStorage.getItem('saveDB') || "[]");
+    Database.array = [...savedDB];
+}
+
+fillDataOnLoad()
 Database.display();

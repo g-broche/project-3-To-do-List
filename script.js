@@ -16,11 +16,32 @@ Database.add = function (desc, priority) {
     this.array.push(newTask);
 }
 
+//checks if task already exists in collection, returns index if yes or -1 otherwise
+Database.doesTaskExist = function (desc) {
+    for (let i = 0; i <= this.array.length - 1; i++) {
+        if (this.array[i].taskName == desc) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+//if user enter new task with an already existing name, display an alert. require task index.
+Database.TaskExistError = function (taskIndex) {
+    alert("the task called \"" + this.array[taskIndex].taskName + "\" already exists in the list at this time!");
+}
+
 //displays the tasks contained in the Database
 Database.display = function () {
     clearTaskList()
-    let priorityClass;
+
     for (let i = 0; i <= this.array.length - 1; i++) {
+        let spanContainer = document.createElement("div");
+        let currentTask = document.createElement("span");   //creates span element containing task description
+        let doneButton = document.createElement("button");  //creates button to say a task is done
+        let deleteButton = document.createElement("button");  //creates button to remove a task
+        let newLi = document.createElement("li");   //adds span and buttons to a newly <li> element and then add the <li> to the existing <ul>
+        let priorityClass;
         switch (this.array[i].priorityLevel) {  //checks priority of task to attribute class and display corresponding color
             case "high":
                 priorityClass = "priorityHigh";
@@ -35,26 +56,31 @@ Database.display = function () {
                 priorityClass = "priorityModerate";
                 break;
         }
-        let currentTask = document.createElement("span");   //creates span element containing task description
+
         if (this.array[i].isDone) {
-            currentTask.classList.add("taskName", "done", priorityClass);
+            currentTask.classList.add("taskName");
+            doneButton.classList.add("doneButton", "doneButtonDone");
+            newLi.classList.add(priorityClass, "done");
         } else {
-            currentTask.classList.add("taskName", priorityClass);
+            currentTask.classList.add("taskName");
+            doneButton.classList.add("doneButton", "doneButtonToDo");
+            newLi.classList.add(priorityClass);
         }
         currentTask.textContent = (this.array[i].taskName);
+        doneButton.innerHTML = "&check;";
+        doneButton.onclick = changeTaskStatus;
 
-        let doneButton = document.createElement("button");  //creates button to say a task is done
-        doneButton.classList.add("taskDone");
-        doneButton.textContent = "Done";
-        doneButton.onclick = taskIsDone;
+        let trashbinSVG = new Image();
+        trashbinSVG.src = "Resources/trash.svg";
+        trashbinSVG.alt = "trashbinIcon"
+        trashbinSVG.classList.add("center")
 
-        let deleteButton = document.createElement("button");  //creates button to remove a task
         deleteButton.classList.add("taskdelete");
-        deleteButton.textContent = "remove";
+        deleteButton.appendChild(trashbinSVG);
         deleteButton.onclick = removeTask;
 
-        let newLi = document.createElement("li");   //adds span and buttons to a newly <li> element and then add the <li> to the existing <ul>
-        newLi.append(currentTask, doneButton, deleteButton);
+        spanContainer.appendChild(currentTask);
+        newLi.append(spanContainer, doneButton, deleteButton);
         taskList.appendChild(newLi)
     }
 }
@@ -122,15 +148,22 @@ function getIndexFromButtonPush(trigger) {
 
 //adds a new task to the Database based on input fields, sort the database and display it
 function addNewTask() {
-    Database.add(inputTask.value, inputPriority.value);
-    Database.sort();
-    Database.display();
+    let newTask = inputTask.value;
+    let newTaskPriority = inputPriority.value;
+    let taskExistsAt = Database.doesTaskExist(newTask);
+    if (taskExistsAt == -1) {
+        Database.add(newTask, newTaskPriority);
+        Database.sort();
+        Database.display();
+    } else {
+        Database.TaskExistError(taskExistsAt);
+    }
 }
 
 //on <done> button click, gets index of task to be crossed and compare it to the list of tasks and line through the task in question.
-function taskIsDone() {
+function changeTaskStatus() {
     let taskIndex = getIndexFromButtonPush(this);
-    Database.array[taskIndex].isDone = true;
+    Database.array[taskIndex].isDone = (Database.array[taskIndex].isDone ? false : true);
     Database.sort();
     Database.display();
 }

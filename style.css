@@ -3,49 +3,105 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: hsl(210, 35%, 35%);
+    background-color: #2D465E;
+}
+
+main {
+    text-align: center;
 }
 
 #saveTasks {
     margin-left: 3em;
 }
 
+#taskContainer {
+    width: 30%;
+    justify-content: flex-end;
+}
+
 .taskDiv {
+    display: flex;
+    justify-content: center;
     margin-top: 2em;
-    margin-left: 30%;
-    width: 40%;
-    text-align: left;
 }
 
 li {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
     display: flex;
-    justify-content: flex-start;
-    gap: 3px;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    min-height: 3em;
+    max-height: 5em;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    gap: 1em;
+    background-color: #729BC4;
+    border-radius: 10px/15px;
 }
 
-li span.taskName {
-    margin-right: 10px;
+li div {
+    margin-right: auto;
+    overflow-wrap: break-word;
+    width: 70%;
+    text-align: left;
 }
 
-li button {
-    background-color: inherit;
-    border: none;
+.taskName {
+    font-size: 1.2em;
 }
 
 .priorityHigh {
-    color: red;
+    background-color: #E64E44;
 }
 
 .priorityModerate {
-    color: orange;
+    background-color: #FC853F;
 }
 
 .priorityLow {
-    color: yellow;
+    background-color: #E8BA25;
 }
 
 .done {
-    text-decoration-line: line-through;
+    opacity: 60%;
+    box-shadow: 0 0 1px 3px inset #3ec71f;
+}
+
+.doneButton {
+    font-size: 1.5em;
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    border: 2px solid #404454;
+}
+
+.doneButtonToDo {
+    background-color: #A1ACD4;
+}
+
+.doneButtonDone {
+    background-color: #3ec71f;
+    border-color: #1c590d;
+}
+
+.taskdelete {
+    height: 40px;
+    width: 40px;
+    background-color: #A1ACD4;
+    border-style: solid;
+    border-width: 2px;
+    border-left-color: #c7ceea;
+    border-top-color: #c7ceea;
+    border-right-color: #404454;
+    border-bottom-color: #404454;
+    border-radius: 5px;
+}
+
+.taskdelete img {
+    width: 1.5em;
+    height: 1.5em;
 }
 
 .boxed {
@@ -54,6 +110,7 @@ li button {
 
 .center {
     text-align: center;
+    vertical-align: middle;
 }
 
 .button {

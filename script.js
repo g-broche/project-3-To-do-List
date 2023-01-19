@@ -1,5 +1,6 @@
 const inputTask = document.getElementById("inputField");
 const inputPriority = document.getElementById("priorityList");
+const inputdDateField = document.getElementById("newTaskDate");
 
 const taskList = document.getElementById("taskContainer");
 
@@ -71,7 +72,7 @@ Database.display = function () {
         doneButton.onclick = changeTaskStatus;
 
         let trashbinSVG = new Image();
-        trashbinSVG.src = "Resources/trash.svg";
+        trashbinSVG.src = "Resources/trash.svg"
         trashbinSVG.alt = "trashbinIcon"
         trashbinSVG.classList.add("center")
 
@@ -138,6 +139,20 @@ function Task(name, priority, bool = false) {
 
 /* ***** functions ***** */
 
+//fill date input based on the current date
+function fillDateInput() {
+    let date = new Date();
+    let maxDate = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
+    console.log(date)
+    console.log(maxDate)
+    inputdDateField.valueAsDate = date;
+    inputdDateField.minAsDate = date;
+    inputdDateField.max = date.getFullYear() + 1 + "-" + date.getMonth() + 1 + "-" + date.getDate();
+    //inputdDateField.maxAsDate = maxDate;
+}
+
+
+
 //using an element as parameter, gets and returns the index of the corresponding list item inside the parent unordered list.
 function getIndexFromButtonPush(trigger) {
     let listItem = trigger.parentElement;
@@ -193,5 +208,9 @@ function fillDataOnLoad() {
     Database.array = [...savedDB];
 }
 
-fillDataOnLoad()
+
+
+fillDateInput();
+console.log(inputdDateField.max);
+fillDataOnLoad();
 Database.display();

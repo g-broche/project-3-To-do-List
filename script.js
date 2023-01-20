@@ -1,8 +1,17 @@
 const inputTask = document.getElementById("inputField");
 const inputPriority = document.getElementById("priorityList");
 const inputdDateField = document.getElementById("newTaskDate");
-
+const addTaskButton = document.getElementById("addTaskButton");
+const saveTasksButton = document.getElementById("saveTasksButton");
 const taskList = document.getElementById("taskContainer");
+
+const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+
+
+/* ***** setting eventlistener of native elements ***** */
+
+addTaskButton.addEventListener("click", function () { addNewTask() });
+saveTasksButton.addEventListener("click", function () { storeTaskList() });
 
 
 /* ***** create database array containing task objects, followed by its methods ***** */
@@ -12,8 +21,8 @@ const Database = {
 };
 
 //creates and adds a new task object in the Database
-Database.add = function (desc, priority) {
-    let newTask = new Task(desc, priority, false);
+Database.add = function (desc, priority, date) {
+    let newTask = new Task(desc, priority, date);
     this.array.push(newTask);
 }
 
@@ -35,6 +44,10 @@ Database.TaskExistError = function (taskIndex) {
 //displays the tasks contained in the Database
 Database.display = function () {
     clearTaskList()
+    Database.sort();
+    Database.sortByDate();
+
+    let previousDate;
 
     for (let i = 0; i <= this.array.length - 1; i++) {
         let spanContainer = document.createElement("div");
@@ -43,6 +56,21 @@ Database.display = function () {
         let deleteButton = document.createElement("button");  //creates button to remove a task
         let newLi = document.createElement("li");   //adds span and buttons to a newly <li> element and then add the <li> to the existing <ul>
         let priorityClass;
+
+        //checks if first entry or a different task.deadline than previous loop iteration, if yes then append a separating div and text to the task UL
+        if ((i == 0 && this.array[0] != undefined) || (this.array[i].deadline) != previousDate) {
+            let dateContainer = document.createElement("div");
+            dateContainer.classList.add("divDate")
+            let datetitle = document.createElement("h2");
+            datetitle.classList.add("titleDate")
+            let taskDeadline = new Date(this.array[i].deadline);
+            datetitle.textContent = taskDeadline.getDate() + " " + months[taskDeadline.getMonth()] + " " + taskDeadline.getFullYear();
+            dateContainer.appendChild(datetitle);
+            taskList.appendChild(dateContainer);
+
+        }
+
+
         switch (this.array[i].priorityLevel) {  //checks priority of task to attribute class and display corresponding color
             case "high":
                 priorityClass = "priorityHigh";
@@ -69,27 +97,39 @@ Database.display = function () {
         }
         currentTask.textContent = (this.array[i].taskName);
         doneButton.innerHTML = "&check;";
-        doneButton.onclick = changeTaskStatus;
+        doneButton.addEventListener("click", function () { changeTaskStatus(i) });
 
         let trashbinSVG = new Image();
-        trashbinSVG.src = "Resources/trash.svg"
-        trashbinSVG.alt = "trashbinIcon"
-        trashbinSVG.classList.add("center")
+        trashbinSVG.src = "Resources/trash.svg";
+        trashbinSVG.alt = "trashbinIcon";
+        trashbinSVG.classList.add("center");
 
         deleteButton.classList.add("taskdelete");
         deleteButton.appendChild(trashbinSVG);
-        deleteButton.onclick = removeTask;
+        deleteButton.addEventListener("click", function () { removeTask(i) });
 
         spanContainer.appendChild(currentTask);
         newLi.append(spanContainer, doneButton, deleteButton);
-        taskList.appendChild(newLi)
+        taskList.appendChild(newLi);
+
+        previousDate = this.array[i].deadline;
     }
+}
+
+function compareDates(a, b) {
+    return Date.parse(new Date(a.deadline)) - Date.parse(new Date(b.deadline));
+}
+
+//sort database by deadline property of tasks
+Database.sortByDate = function () {
+    this.array.sort(compareDates);
 }
 
 
 //sorts the array contained inside the Database object based on priority level of task objects and if the tasks are done
 Database.sort = function () {
     let tempBase = [];
+    let tableIndex = 0;
     for (let i = 0; i <= this.array.length - 1; i++) {
         if ((this.array[i].priorityLevel == "high") && (!this.array[i].isDone)) {
             tempBase.push(this.array[i]);
@@ -131,10 +171,11 @@ Database.deleteTask = function (index) {
 
 /* ***** Task object constructor followed by task object methods ***** */
 
-function Task(name, priority, bool = false) {
+function Task(name, priority, date) {
     this.taskName = name;
     this.priorityLevel = priority;
-    this.isDone = bool;
+    this.deadline = date;
+    this.isDone = false;
 }
 
 /* ***** functions ***** */
@@ -142,16 +183,14 @@ function Task(name, priority, bool = false) {
 //fill date input based on the current date
 function fillDateInput() {
     let date = new Date();
-    let maxDate = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-    console.log(date)
-    console.log(maxDate)
     inputdDateField.valueAsDate = date;
-    inputdDateField.minAsDate = date;
+    inputdDateField.minAsDate = date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
     inputdDateField.max = date.getFullYear() + 1 + "-" + date.getMonth() + 1 + "-" + date.getDate();
-    //inputdDateField.maxAsDate = maxDate;
 }
 
-
+function isDateAllowed(d, min, max) {
+    return ((min <= d && d <= max) ? true : false);
+}
 
 //using an element as parameter, gets and returns the index of the corresponding list item inside the parent unordered list.
 function getIndexFromButtonPush(trigger) {
@@ -165,29 +204,30 @@ function getIndexFromButtonPush(trigger) {
 function addNewTask() {
     let newTask = inputTask.value;
     let newTaskPriority = inputPriority.value;
-    let taskExistsAt = Database.doesTaskExist(newTask);
-    if (taskExistsAt == -1) {
-        Database.add(newTask, newTaskPriority);
-        Database.sort();
-        Database.display();
+    let newTaskDate = inputdDateField.value;
+    console.log("new date = " + newTaskDate + "; min = " + inputdDateField.min + "; max = " + inputdDateField.max)
+    if (isDateAllowed(newTaskDate, inputdDateField.min, inputdDateField.max)) {
+        let taskExistsAt = Database.doesTaskExist(newTask);
+        if (taskExistsAt == -1) {
+            Database.add(newTask, newTaskPriority, newTaskDate);
+            Database.display();
+        } else {
+            Database.TaskExistError(taskExistsAt);
+        }
     } else {
-        Database.TaskExistError(taskExistsAt);
+        inputdDateField.value = inputdDateField.min;
     }
 }
 
 //on <done> button click, gets index of task to be crossed and compare it to the list of tasks and line through the task in question.
-function changeTaskStatus() {
-    let taskIndex = getIndexFromButtonPush(this);
+function changeTaskStatus(taskIndex) {
     Database.array[taskIndex].isDone = (Database.array[taskIndex].isDone ? false : true);
-    Database.sort();
     Database.display();
 }
 
 // on <remove> button click, gets index of task to be removed and compare it to the list of tasks and remove it from Database object.
-function removeTask() {
-    let taskIndex = getIndexFromButtonPush(this);
+function removeTask(taskIndex) {
     Database.deleteTask(taskIndex);
-    Database.sort();
     Database.display();
 }
 
@@ -211,6 +251,7 @@ function fillDataOnLoad() {
 
 
 fillDateInput();
-console.log(inputdDateField.max);
 fillDataOnLoad();
+Database.sort();
+Database.sortByDate();
 Database.display();

@@ -10,9 +10,18 @@ const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet"
 
 /* ***** setting eventlistener of native elements ***** */
 
+inputTask.addEventListener("input", function () { enableAddButton() });
 addTaskButton.addEventListener("click", function () { addNewTask() });
 saveTasksButton.addEventListener("click", function () { storeTaskList() });
 
+
+function enableAddButton() {
+    if (inputTask.value == "") {
+        addTaskButton.disabled = true;
+    } else {
+        addTaskButton.disabled = false;
+    }
+}
 
 /* ***** create database array containing task objects, followed by its methods ***** */
 
@@ -70,7 +79,6 @@ Database.display = function () {
 
         }
 
-
         switch (this.array[i].priorityLevel) {  //checks priority of task to attribute class and display corresponding color
             case "high":
                 priorityClass = "priorityHigh";
@@ -96,6 +104,9 @@ Database.display = function () {
             newLi.classList.add(priorityClass);
         }
         currentTask.textContent = (this.array[i].taskName);
+        currentTask.addEventListener("click", function (e) { enableTaskEdit(e) })
+        currentTask.addEventListener("focusout", function (e) { changeTaskName(e, i) })
+
         doneButton.innerHTML = "&check;";
         doneButton.addEventListener("click", function () { changeTaskStatus(i) });
 
@@ -193,6 +204,22 @@ function isDateAllowed(d, min, max) {
     return ((min <= d && d <= max) ? true : false);
 }
 
+//make a task name editable on click
+function enableTaskEdit(e) {
+    e.target.setAttribute("contenteditable", "true");
+    e.target.setAttribute("maxlength", "100");
+}
+
+//changes the name of the task in database based on text content when focus is lost
+function changeTaskName(e, index) {
+    if (e.target.textContent != "") {
+        Database.array[index].taskName = e.target.textContent;
+        Database.display();
+    } else {
+        e.target.textContent = Database.array[index].taskName;
+    }
+}
+
 //using an element as parameter, gets and returns the index of the corresponding list item inside the parent unordered list.
 function getIndexFromButtonPush(trigger) {
     let listItem = trigger.parentElement;
@@ -203,20 +230,24 @@ function getIndexFromButtonPush(trigger) {
 
 //adds a new task to the Database based on input fields, sort the database and display it
 function addNewTask() {
-    let newTask = inputTask.value;
-    let newTaskPriority = inputPriority.value;
-    let newTaskDate = inputdDateField.value;
-    console.log("new date = " + newTaskDate + "; min = " + inputdDateField.min + "; max = " + inputdDateField.max)
-    if (isDateAllowed(newTaskDate, inputdDateField.min, inputdDateField.max)) {
-        let taskExistsAt = Database.doesTaskExist(newTask);
-        if (taskExistsAt == -1) {
-            Database.add(newTask, newTaskPriority, newTaskDate);
-            Database.display();
+
+    if (inputTask.value != "") {
+        let newTask = inputTask.value;
+        let newTaskPriority = inputPriority.value;
+        let newTaskDate = inputdDateField.value;
+        console.log("new date = " + newTaskDate + "; min = " + inputdDateField.min + "; max = " + inputdDateField.max)
+        if (isDateAllowed(newTaskDate, inputdDateField.min, inputdDateField.max)) {
+            let taskExistsAt = Database.doesTaskExist(newTask);
+            if (taskExistsAt == -1) {
+                Database.add(newTask, newTaskPriority, newTaskDate);
+                Database.display();
+            } else {
+                Database.TaskExistError(taskExistsAt);
+            }
         } else {
-            Database.TaskExistError(taskExistsAt);
+            inputdDateField.value = inputdDateField.min;
         }
-    } else {
-        inputdDateField.value = inputdDateField.min;
+        inputTask.value = "";
     }
 }
 
@@ -250,9 +281,7 @@ function fillDataOnLoad() {
 }
 
 
-
+enableAddButton();
 fillDateInput();
 fillDataOnLoad();
-Database.sort();
-Database.sortByDate();
 Database.display();

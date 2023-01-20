@@ -208,6 +208,7 @@ function isDateAllowed(d, min, max) {
 function enableTaskEdit(e) {
     e.target.setAttribute("contenteditable", "true");
     e.target.setAttribute("maxlength", "100");
+    e.target.classList.add("editable");
 }
 
 //changes the name of the task in database based on text content when focus is lost
@@ -218,6 +219,7 @@ function changeTaskName(e, index) {
     } else {
         e.target.textContent = Database.array[index].taskName;
     }
+    e.target.classList.remove("editable");
 }
 
 //using an element as parameter, gets and returns the index of the corresponding list item inside the parent unordered list.

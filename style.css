@@ -1,4 +1,5 @@
 body {
+    font-family: 'Merriweather', serif;
     width: 100%;
     height: 100%;
     margin: 0;
@@ -10,19 +11,51 @@ main {
     text-align: center;
 }
 
+.addTaskDiv {
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+    gap: 1em;
+}
+
+#textField {
+    display: inline-flex;
+    box-sizing: border-box;
+    height: 100%;
+
+}
+
+#inputFields {
+    display: flex;
+    gap: .5em;
+}
+
+#deadlineInputs {
+    display: inline-flex;
+    gap: .5em;
+}
+
+#inputButtons {
+    display: inline-flex;
+    gap: .5em;
+}
+
 #saveTasks {
     margin-left: 3em;
 }
 
 #taskContainer {
-    width: 30%;
+    max-width: 50%;
+    padding: 0;
     justify-content: flex-end;
 }
 
 .taskDiv {
     display: flex;
+    flex-flow: row wrap;
     justify-content: center;
     margin-top: 2em;
+
 }
 
 li {
@@ -33,7 +66,7 @@ li {
     align-items: center;
     width: 100%;
     min-height: 3em;
-    max-height: 5em;
+    max-height: 7em;
     padding: 5px 10px;
     margin-bottom: 5px;
     gap: 1em;
@@ -128,4 +161,111 @@ li div {
 
 .button {
     padding: 3px 10px;
+}
+
+h1 {
+    font-size: 3em;
+    color: aliceblue;
+    text-shadow: 3px 2px 1px #000, 3px 2px 1px #000;
+}
+
+
+@media only screen and (max-width: 1400px) {
+    #taskContainer {
+        max-width: 60%;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    #taskContainer {
+        max-width: 70%;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    #taskContainer {
+        max-width: 80%;
+    }
+}
+
+
+
+@media only screen and (max-width: 800px) {
+    body {
+        font-size: 70%;
+    }
+
+    .addTaskDiv {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    #inputFields {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: .5em;
+    }
+
+    #textField {
+        align-self: center;
+        width: 80%;
+    }
+
+    #deadlineInputs {
+        justify-content: space-between;
+        width: 80%;
+    }
+
+    #taskContainer {
+        width: 80%;
+    }
+
+    #inputButtons {
+        width: 80%;
+        align-self: center;
+        justify-content: flex-end;
+        gap: 1em;
+    }
+
+    .doneButton {
+        font-size: 1.5em;
+        height: 30px;
+        width: 30px;
+        border-radius: 15px;
+    }
+
+    .taskdelete {
+        height: 30px;
+        width: 30px;
+        border-radius: 4px;
+    }
+
+}
+
+@media only screen and (max-width: 450px) {
+    body {
+        font-size: 60%;
+    }
+
+    #textField {
+        width: 90%;
+    }
+
+    #deadlineInputs {
+        width: 90%;
+    }
+
+    #taskContainer {
+        width: 90%;
+    }
+
+    #inputButtons {
+        width: 90%;
+    }
+
+    #taskContainer {
+        max-width: 90%;
+    }
 }

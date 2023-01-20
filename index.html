@@ -6,27 +6,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <main class="boxed">
         <h1>To-do list</h1>
-        <div class="addTaskDiv boxed">
-            <input type="text" id="inputField" name="inputField" placeholder="Add a new task" size="50" maxlength="100">
-            <select class="button" id="priorityList" name="priorityList" autocomplete="off">
-                <option value="high">High Priority</option>
-                <option selected value="moderate">Moderate Priority</option>
-                <option value="low">Low Priority</option>
-            </select>
-            <input type="date" id="newTaskDate" value="2022-07-15" min="2023-01-19" max="2023-12-31">
-            <button id="addTaskButton" class="button">Add</button>
-            <button id="saveTasksButton" class="button"">Save list</button>
-        </div>
-        <div class=" taskDiv boxed">
-                <ul id="taskContainer">
+        <section id="inputMenu">
+            <div class="addTaskDiv boxed">
+                <div id="inputFields">
+                    <input type="text" id="textField" name="inputField" placeholder="Add a new task" size="50"
+                        maxlength="100">
+                    <div id="deadlineInputs">
+                        <input type="date" id="newTaskDate" value="2022-07-15" min="2023-01-19" max="2023-12-31">
+                        <select class="button" id="priorityList" name="priorityList" autocomplete="off">
+                            <option value="high">High Priority</option>
+                            <option selected value="moderate">Moderate Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="inputButtons">
+                    <button id="addTaskButton" class="button">Add</button>
+                    <button id="saveTasksButton" class="button"">Save list</button>
+                </div>
+            </div>
+        </section>
+        <section class=" taskDiv boxed">
+                        <ul id="taskContainer">
 
-                </ul>
-        </div>
+                        </ul>
+        </section>
     </main>
 
 </body>

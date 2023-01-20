@@ -1,4 +1,4 @@
-const inputTask = document.getElementById("inputField");
+const inputTask = document.getElementById("textField");
 const inputPriority = document.getElementById("priorityList");
 const inputdDateField = document.getElementById("newTaskDate");
 const addTaskButton = document.getElementById("addTaskButton");
@@ -188,6 +188,7 @@ function fillDateInput() {
     inputdDateField.max = date.getFullYear() + 1 + "-" + date.getMonth() + 1 + "-" + date.getDate();
 }
 
+//checks if a date is included between two other dates
 function isDateAllowed(d, min, max) {
     return ((min <= d && d <= max) ? true : false);
 }
